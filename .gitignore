@@ -1,0 +1,37 @@
+# ── Ambiente Python ─────────────────────────────────────────────
+ai_engine/venv/
+ai_engine/__pycache__/
+ai_engine/*.pyc
+*.pyc
+*.pyo
+
+# ── Variáveis de ambiente (NUNCA subir a API key) ───────────────
+.env
+*.env
+
+# ── Node.js ─────────────────────────────────────────────────────
+node_modules/
+backend/node_modules/
+mobile/node_modules/
+
+# ── Expo ────────────────────────────────────────────────────────
+mobile/.expo/
+mobile/dist/
+mobile/.expo-shared/
+
+# ── Build Android/iOS ───────────────────────────────────────────
+mobile/android/
+mobile/ios/
+*.apk
+*.ipa
+
+# ── Lock files duplicados ────────────────────────────────────────
+yarn.lock
+package-lock.json
+
+# ── VS Code ─────────────────────────────────────────────────────
+.vscode/
+
+# ── Sistema ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
