@@ -59,15 +59,92 @@ pc-assistant-app/
 └── README.md
 ```
 
+---
+
 ## Pré-requisitos
 
-- Node.js 18+
-- Python 3.10+
-- Expo CLI
-- Android Studio (emulador) ou dispositivo físico
-- Chaves de API: Google AI e Groq
+Instale as ferramentas abaixo antes de configurar o projeto.
 
-## Instalação
+### 1. Git
+Download: https://git-scm.com/download/win
+
+Após instalar, configure seu usuário:
+```bash
+git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"
+```
+
+### 2. Node.js (versão 18 ou superior)
+Download: https://nodejs.org
+
+Verificar instalação:
+```bash
+node --version
+npm --version
+```
+
+### 3. Yarn
+```bash
+npm install -g yarn
+```
+
+Verificar instalação:
+```bash
+yarn --version
+```
+
+### 4. Expo CLI
+```bash
+npm install -g expo-cli
+```
+
+### 5. Python (versão 3.10 ou superior)
+Download: https://www.python.org/downloads
+
+> Marque a opção **"Add Python to PATH"** durante a instalação.
+
+Verificar instalação:
+```bash
+python --version
+```
+
+### 6. Java JDK (versão 17 ou superior)
+Download: https://www.oracle.com/java/technologies/downloads
+
+> Necessário para o Android Studio funcionar.
+
+Verificar instalação:
+```bash
+java --version
+```
+
+### 7. Android Studio
+Download: https://developer.android.com/studio
+
+Após instalar:
+1. Abre o Android Studio
+2. Vai em **More Actions → Virtual Device Manager**
+3. Cria um emulador (recomendado: Pixel 6, API 34)
+4. Configura a variável de ambiente `ANDROID_HOME`:
+   - Caminho padrão Windows: `C:\Users\SeuUsuario\AppData\Local\Android\Sdk`
+   - Adiciona ao PATH do sistema: `%ANDROID_HOME%\platform-tools`
+
+Verificar instalação:
+```bash
+adb --version
+```
+
+### 8. VS Code (recomendado)
+Download: https://code.visualstudio.com
+
+Para instalar todas as extensões usadas no projeto:
+```powershell
+Get-Content vscode-extensions.txt | ForEach-Object { code --install-extension $_ }
+```
+
+---
+
+## Instalação do projeto
 
 ### 1. Clonar o repositório
 
@@ -116,6 +193,12 @@ GROQ_API_KEY=sua_chave_groq_aqui
 
 > Nunca compartilhe suas chaves de API. O arquivo `.env` está no `.gitignore`.
 
+Como obter as chaves:
+- **Google AI (Gemini):** https://aistudio.google.com/app/apikey
+- **Groq:** https://console.groq.com/keys
+
+---
+
 ## Como rodar
 
 **Terminal 1 — Backend:**
@@ -133,15 +216,7 @@ npx expo start
 > Para emulador Android Studio, o backend é acessado via `http://10.0.2.2:3000`.  
 > Para dispositivo físico, use o IP local da máquina (ex: `http://192.168.0.X:3000`).
 
-## Extensões VS Code recomendadas
-
-As extensões utilizadas no desenvolvimento estão listadas em `vscode-extensions.txt`.
-
-Para instalar todas de uma vez no PowerShell:
-
-```powershell
-Get-Content vscode-extensions.txt | ForEach-Object { code --install-extension $_ }
-```
+---
 
 ## Commits
 
@@ -155,6 +230,8 @@ Este projeto segue o padrão de commits:
 | `style:` | Mudança visual |
 | `docs:` | Documentação |
 | `chore:` | Configuração e dependências |
+
+---
 
 ## Licença
 
