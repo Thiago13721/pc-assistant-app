@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { Product } from './Category';
+import { useStore } from '../store/useStore'; // <-- Zustand
 
 type PCBuildNavigationProp = StackNavigationProp<RootStackParamList, 'PCBuild'>;
 
@@ -15,12 +15,11 @@ interface Props {
   navigation: PCBuildNavigationProp;
 }
 
-// Slots obrigatórios para um PC completo
 interface BuildSlot {
   key: string;
   label: string;
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  category: string; // qual categoria do app abre ao clicar
+  category: string; 
   required: boolean;
 }
 
@@ -35,70 +34,34 @@ const BUILD_SLOTS: BuildSlot[] = [
   { key: 'cooler',   label: 'Cooler',        icon: 'fan',            category: 'Coolers',         required: false },
 ];
 
-// Simulação de peças já adicionadas via carrinho (futuramente virá do Zustand/Context)
-const MOCK_SELECTED: Record<string, Product> = {
-  cpu: {
-    id: 'cpu-1',
-    name: 'AMD Ryzen 5 7600X',
-    description: '6 núcleos / 12 threads — Socket AM5.',
-    price: 1349.90,
-    image: '',
-    category: 'Processadores',
-    specs: { socket: 'AM5', nucleos: '6', tdp: '105W' },
-  },
-  mb: {
-    id: 'mb-1',
-    name: 'ASUS Prime B650M-A',
-    description: 'Socket AM5 — DDR5, Micro-ATX.',
-    price: 999.90,
-    image: '',
-    category: 'Placas Mãe',
-    specs: { socket: 'AM5', formato: 'Micro-ATX', ram: 'DDR5' },
-  },
-  ram: {
-    id: 'ram-1',
-    name: 'Kingston Fury Beast 16GB DDR5',
-    description: 'DDR5-5200MHz CL40.',
-    price: 549.90,
-    image: '',
-    category: 'Memória RAM',
-    specs: { capacidade: '16GB', tipo: 'DDR5' },
-  },
-  psu: {
-    id: 'psu-2',
-    name: 'Seasonic Focus GX-750 750W',
-    description: '80 Plus Gold Full Modular.',
-    price: 799.90,
-    image: '',
-    category: 'Fontes',
-    specs: { potencia: '750W', certificacao: '80 Plus Gold' },
-  },
-};
-
 export function PCBuild({ navigation }: Props) {
-  const [selected, setSelected] = useState<Record<string, Product>>(MOCK_SELECTED);
+  // Lendo Zustand
+  const pcBuild = useStore(state => state.pcBuild);
+  const removeBuildItem = useStore(state => state.removeBuildItem);
+
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState('');
 
-  const totalPrice = Object.values(selected).reduce((sum, p) => sum + p.price, 0);
+  // Cálculos baseados no estado global
+  const items = Object.values(pcBuild).filter(Boolean);
+  const totalPrice = items.reduce((sum, p) => sum + (p?.price || 0), 0);
+  
   const requiredSlots = BUILD_SLOTS.filter(s => s.required);
-  const filledRequired = requiredSlots.filter(s => selected[s.key]);
+  const filledRequired = requiredSlots.filter(s => pcBuild[s.category]);
   const isComplete = filledRequired.length === requiredSlots.length;
   const progress = filledRequired.length / requiredSlots.length;
 
-  const removeSlot = (key: string) => {
+  const removeSlot = (categoryKey: string, itemName: string) => {
     Alert.alert(
       'Remover peça',
-      `Deseja remover ${selected[key]?.name}?`,
+      `Deseja remover ${itemName}?`,
       [
         { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Remover',
           style: 'destructive',
           onPress: () => {
-            const updated = { ...selected };
-            delete updated[key];
-            setSelected(updated);
+            removeBuildItem(categoryKey);
             setAiResult('');
           },
         },
@@ -107,15 +70,15 @@ export function PCBuild({ navigation }: Props) {
   };
 
   const analyzeWithAI = async () => {
-    if (Object.keys(selected).length === 0) {
+    if (items.length === 0) {
       Alert.alert('Atenção', 'Adicione pelo menos uma peça antes de analisar.');
       return;
     }
     setAiLoading(true);
     setAiResult('');
 
-    const buildSummary = Object.entries(selected)
-      .map(([key, p]) => `${p.category}: ${p.name} (${JSON.stringify(p.specs)})`)
+    const buildSummary = items
+      .map(p => `${p?.category}: ${p?.name} (${JSON.stringify(p?.specs)})`)
       .join('\n');
 
     try {
@@ -139,7 +102,7 @@ export function PCBuild({ navigation }: Props) {
   const handleFinalize = () => {
     if (!isComplete) {
       const missing = requiredSlots
-        .filter(s => !selected[s.key])
+        .filter(s => !pcBuild[s.category])
         .map(s => s.label)
         .join(', ');
       Alert.alert(
@@ -162,7 +125,6 @@ export function PCBuild({ navigation }: Props) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="arrow-left" size={22} color="#fff" />
@@ -173,7 +135,6 @@ export function PCBuild({ navigation }: Props) {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
-        {/* Barra de progresso */}
         <View style={styles.progressSection}>
           <View style={styles.progressRow}>
             <Text style={styles.progressLabel}>
@@ -191,11 +152,10 @@ export function PCBuild({ navigation }: Props) {
           </View>
         </View>
 
-        {/* Checklist de slots */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Peças do Build</Text>
           {BUILD_SLOTS.map((slot) => {
-            const product = selected[slot.key];
+            const product = pcBuild[slot.category];
             const filled = !!product;
 
             return (
@@ -207,7 +167,6 @@ export function PCBuild({ navigation }: Props) {
                   !filled && !slot.required && styles.slotCardOptional,
                 ]}
               >
-                {/* Ícone + label */}
                 <View style={[styles.slotIconBox, filled && styles.slotIconBoxFilled]}>
                   <MaterialCommunityIcons
                     name={slot.icon}
@@ -237,14 +196,13 @@ export function PCBuild({ navigation }: Props) {
                   )}
                 </View>
 
-                {/* Ações */}
                 <View style={styles.slotActions}>
                   {filled ? (
                     <>
                       <MaterialCommunityIcons name="check-circle" size={20} color="#4ade80" />
                       <TouchableOpacity
                         style={styles.removeBtn}
-                        onPress={() => removeSlot(slot.key)}
+                        onPress={() => removeSlot(slot.category, product.name)}
                       >
                         <MaterialCommunityIcons name="close" size={16} color="#ff4444" />
                       </TouchableOpacity>
@@ -263,7 +221,6 @@ export function PCBuild({ navigation }: Props) {
           })}
         </View>
 
-        {/* Análise da IA */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Análise da IA</Text>
           {aiResult === '' && !aiLoading ? (
@@ -297,13 +254,12 @@ export function PCBuild({ navigation }: Props) {
         <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* Footer fixo */}
       <View style={styles.footer}>
         <View style={styles.footerTotal}>
           <Text style={styles.footerTotalLabel}>Total estimado</Text>
           <Text style={styles.footerTotalValue}>R$ {formatPrice(totalPrice)}</Text>
           <Text style={styles.footerPieceCount}>
-            {Object.keys(selected).length} peça{Object.keys(selected).length !== 1 ? 's' : ''}
+            {items.length} peça{items.length !== 1 ? 's' : ''}
           </Text>
         </View>
         <TouchableOpacity
@@ -327,18 +283,13 @@ export function PCBuild({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
-
-  // Header
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16,
   },
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
-
   scroll: { paddingBottom: 16 },
-
-  // Progresso
   progressSection: { paddingHorizontal: 20, marginBottom: 24 },
   progressRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
   progressLabel: { color: '#a1a1aa', fontSize: 13 },
@@ -346,12 +297,8 @@ const styles = StyleSheet.create({
   completeText: { color: '#4ade80', fontSize: 13, fontWeight: 'bold' },
   progressBar: { height: 6, backgroundColor: '#1e1e1e', borderRadius: 3 },
   progressFill: { height: 6, backgroundColor: '#4ade80', borderRadius: 3 },
-
-  // Sections
   section: { paddingHorizontal: 20, marginBottom: 24 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#fff', marginBottom: 14 },
-
-  // Slot card
   slotCard: {
     flexDirection: 'row', alignItems: 'center', gap: 14,
     backgroundColor: '#1a1a1a', borderRadius: 14, padding: 14,
@@ -375,19 +322,12 @@ const styles = StyleSheet.create({
   slotProductName: { fontSize: 14, color: '#fff', fontWeight: 'bold', marginBottom: 2 },
   slotEmpty: { fontSize: 13, color: '#444', fontStyle: 'italic' },
   slotPrice: { fontSize: 13, color: '#00d4ff', fontWeight: '600' },
-
-  // Slot actions
   slotActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  removeBtn: {
-    padding: 4, backgroundColor: '#ff444422',
-    borderRadius: 6,
-  },
+  removeBtn: { padding: 4, backgroundColor: '#ff444422', borderRadius: 6 },
   addSlotBtn: {
     backgroundColor: '#00d4ff', width: 32, height: 32,
     borderRadius: 8, justifyContent: 'center', alignItems: 'center',
   },
-
-  // IA
   aiTriggerBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 10, backgroundColor: '#00d4ff', height: 50, borderRadius: 14,
@@ -402,13 +342,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a', borderRadius: 14, padding: 16,
     borderWidth: 1, borderColor: '#00d4ff33',
   },
-  aiResultHeader: {
-    flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12,
-  },
+  aiResultHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
   aiResultLabel: { flex: 1, color: '#00d4ff', fontWeight: 'bold', fontSize: 14 },
   aiResultText: { color: '#e4e4e7', fontSize: 14, lineHeight: 22 },
-
-  // Footer
   footer: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     backgroundColor: '#171717', borderTopWidth: 1, borderTopColor: '#2a2a2a',

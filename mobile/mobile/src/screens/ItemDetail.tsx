@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
+import { useStore } from '../store/useStore'; // <-- Zustand
 
 type ItemDetailNavigationProp = StackNavigationProp<RootStackParamList, 'ItemDetail'>;
 type ItemDetailRouteProp = RouteProp<RootStackParamList, 'ItemDetail'>;
@@ -26,22 +27,31 @@ const MOCK_STORE_PRICES = (basePrice: number) => [
 
 export function ItemDetail({ navigation, route }: Props) {
   const { product } = route.params;
-  const [cartAdded, setCartAdded]   = useState(false);
-  const [buildAdded, setBuildAdded] = useState(false);
-  const [aiLoading, setAiLoading]   = useState(false);
-  const [aiResult, setAiResult]     = useState('');
+  
+  // Zustand States
+  const cart = useStore(state => state.cart);
+  const pcBuild = useStore(state => state.pcBuild);
+  const addToCart = useStore(state => state.addToCart);
+  const setBuildItem = useStore(state => state.setBuildItem);
+
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResult, setAiResult]   = useState('');
+
+  // Verifica se já está selecionado
+  const isCartAdded = cart.some(item => item.id === product.id);
+  const isBuildAdded = pcBuild[product.category]?.id === product.id;
 
   const storePrices = MOCK_STORE_PRICES(product.price);
   const lowestPrice = Math.min(...storePrices.map(s => s.price));
   const lowestStore = storePrices.find(s => s.price === lowestPrice)!;
 
   const handleAddToCart = () => {
-    setCartAdded(true);
+    addToCart(product);
     Alert.alert('✅ Carrinho', `${product.name} adicionado ao carrinho.`);
   };
 
   const handleAddToBuild = () => {
-    setBuildAdded(true);
+    setBuildItem(product.category, product);
     Alert.alert(
       '🖥️ Build',
       `${product.name} adicionado ao seu PC.\n\nDeseja ir para a tela de montagem?`,
@@ -80,7 +90,6 @@ export function ItemDetail({ navigation, route }: Props) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <MaterialCommunityIcons name="arrow-left" size={22} color="#fff" />
@@ -167,7 +176,6 @@ export function ItemDetail({ navigation, route }: Props) {
 
       </ScrollView>
 
-      {/* Footer — preço | Build | Carrinho */}
       <View style={styles.footer}>
         <View style={styles.footerPrice}>
           <Text style={styles.footerPriceLabel}>Melhor preço</Text>
@@ -176,29 +184,29 @@ export function ItemDetail({ navigation, route }: Props) {
         </View>
 
         <TouchableOpacity
-          style={[styles.buildBtn, buildAdded && styles.btnDone]}
+          style={[styles.buildBtn, isBuildAdded && styles.btnDone]}
           activeOpacity={0.8}
           onPress={handleAddToBuild}
-          disabled={buildAdded}
+          disabled={isBuildAdded}
         >
           <MaterialCommunityIcons
-            name={buildAdded ? 'check' : 'desktop-tower'}
+            name={isBuildAdded ? 'check' : 'desktop-tower'}
             size={20} color="#000"
           />
-          <Text style={styles.btnText}>{buildAdded ? 'Build ✓' : 'Build'}</Text>
+          <Text style={styles.btnText}>{isBuildAdded ? 'Build ✓' : 'Build'}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.cartBtn, cartAdded && styles.btnDone]}
+          style={[styles.cartBtn, isCartAdded && styles.btnDone]}
           activeOpacity={0.8}
           onPress={handleAddToCart}
-          disabled={cartAdded}
+          disabled={isCartAdded}
         >
           <MaterialCommunityIcons
-            name={cartAdded ? 'check' : 'cart-plus'}
+            name={isCartAdded ? 'check' : 'cart-plus'}
             size={20} color="#000"
           />
-          <Text style={styles.btnText}>{cartAdded ? 'Adicionado' : 'Carrinho'}</Text>
+          <Text style={styles.btnText}>{isCartAdded ? 'Adicionado' : 'Carrinho'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -268,8 +276,6 @@ const styles = StyleSheet.create({
   aiResultLabel: { flex: 1, color: '#00d4ff', fontWeight: 'bold', fontSize: 14 },
   aiRefreshBtn: { padding: 4 },
   aiResultText: { color: '#e4e4e7', fontSize: 14, lineHeight: 22 },
-
-  // Footer
   footer: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
     backgroundColor: '#171717', borderTopWidth: 1, borderTopColor: '#2a2a2a',

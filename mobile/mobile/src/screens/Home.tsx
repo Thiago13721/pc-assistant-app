@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import { useStore } from '../store/useStore'; // <-- Zustand
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -29,11 +30,12 @@ const CATEGORIES: CategoryItem[] = [
   { id: '6', title: 'Armazenamento',   icon: 'harddisk'       },
 ];
 
-// Mock — futuramente virá do Zustand global
-const CART_ITEM_COUNT = 4;
-
 export function Home({ navigation }: Props) {
   const [loading, setLoading] = useState(false);
+  
+  // Lendo do Zustand
+  const cart = useStore(state => state.cart);
+  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const renderCategory = ({ item }: { item: CategoryItem }) => (
     <TouchableOpacity
@@ -56,24 +58,21 @@ export function Home({ navigation }: Props) {
           <Text style={styles.subtitle}>O que vamos montar hoje?</Text>
         </View>
 
-        {/* Ícones do header */}
         <View style={styles.headerIcons}>
-          {/* Carrinho com badge */}
           <TouchableOpacity
             style={styles.iconBtn}
             onPress={() => navigation.navigate('Cart')}
           >
             <MaterialCommunityIcons name="cart-outline" size={24} color="#fff" />
-            {CART_ITEM_COUNT > 0 && (
+            {cartItemCount > 0 && (
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>
-                  {CART_ITEM_COUNT > 9 ? '9+' : CART_ITEM_COUNT}
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
                 </Text>
               </View>
             )}
           </TouchableOpacity>
 
-          {/* Logout */}
           <TouchableOpacity
             style={styles.iconBtn}
             onPress={() => navigation.navigate('Login')}
@@ -134,15 +133,8 @@ const styles = StyleSheet.create({
   },
   welcome: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
   subtitle: { fontSize: 14, color: '#a1a1aa' },
-
-  // Ícones agrupados
   headerIcons: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  iconBtn: {
-    padding: 8, backgroundColor: '#1e1e1e',
-    borderRadius: 12, position: 'relative',
-  },
-
-  // Badge do carrinho
+  iconBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 12, position: 'relative' },
   badge: {
     position: 'absolute', top: 2, right: 2,
     backgroundColor: '#00d4ff', borderRadius: 8,
@@ -150,7 +142,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   badgeText: { color: '#000', fontSize: 9, fontWeight: 'bold' },
-
   listContent: { paddingHorizontal: 20 },
   columnWrapper: { justifyContent: 'space-between', marginBottom: 16 },
   categoryCard: {
@@ -159,10 +150,7 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#333',
   },
   categoryTitle: { color: '#fff', marginTop: 12, fontSize: 14, fontWeight: 'bold' },
-  buttonContainer: {
-    flexDirection: 'row', paddingHorizontal: 24,
-    paddingBottom: 24, gap: 12,
-  },
+  buttonContainer: { flexDirection: 'row', paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   buildButton: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 8, backgroundColor: '#f59e0b', height: 56, borderRadius: 16,
