@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { useStore } from '../store/useStore';
+import Toast from 'react-native-root-toast';
 
 type CheckoutNavigationProp = StackNavigationProp<RootStackParamList, 'Checkout'>;
 
@@ -52,12 +53,25 @@ export function Checkout({ navigation }: Props) {
       setIsProcessing(false);
       addOrder(cart, finalTotal, paymentMethod);
       clearCart();
-      Alert.alert(
-        'Pedido Confirmado! 🎉',
-        'Sua compra foi processada com sucesso. Você pode acompanhar o status no seu perfil.',
-        [{ text: 'Voltar ao Início', onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Home' }] }) }]
-      );
-    }, 1500);
+      Toast.show('🎉 Pedido confirmado! Acompanhe em Meus Pedidos.', {
+        duration: 3000,
+        position: Toast.positions.TOP,
+        shadow: true,
+        animation: true,
+        backgroundColor: '#1a1a1a',
+        textColor: '#4ade80',
+        opacity: 1,
+        containerStyle: {
+          borderWidth: 1,
+          borderColor: '#4ade80',
+          borderRadius: 12,
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+          marginTop: 50,
+        },
+        onHidden: () => navigation.reset({ index: 0, routes: [{ name: 'Home' }] }),
+      });
+   }, 1500);
   };
 
   if (cart.length === 0) {

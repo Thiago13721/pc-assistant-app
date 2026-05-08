@@ -9,6 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import { useStore } from '../store/useStore'; // <-- Zustand
+import Toast from 'react-native-root-toast';
 
 type ItemDetailNavigationProp = StackNavigationProp<RootStackParamList, 'ItemDetail'>;
 type ItemDetailRouteProp = RouteProp<RootStackParamList, 'ItemDetail'>;
@@ -45,21 +46,41 @@ export function ItemDetail({ navigation, route }: Props) {
   const lowestPrice = Math.min(...storePrices.map(s => s.price));
   const lowestStore = storePrices.find(s => s.price === lowestPrice)!;
 
-  const handleAddToCart = () => {
-    addToCart(product);
-    Alert.alert('✅ Carrinho', `${product.name} adicionado ao carrinho.`);
+const showToast = (message: string, type: 'success' | 'info' | 'error') => {
+  const colors = {
+    success: '#4ade80',
+    info: '#00d4ff',
+    error: '#ff4444',
   };
+  Toast.show(message, {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.TOP,
+    shadow: true,
+    animation: true,
+    backgroundColor: '#1a1a1a',
+    textColor: colors[type],
+    opacity: 1,
+    containerStyle: {
+      borderWidth: 1,
+      borderColor: colors[type],
+      borderRadius: 12,
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      marginTop: 50,
+    },
+  });
+};
+
+  const handleAddToCart = () => {
+    if (isCartAdded) return;
+    addToCart(product);
+    showToast(`🛒 ${product.name} adicionado ao carrinho`, 'success');
+  };
+
 
   const handleAddToBuild = () => {
     setBuildItem(product.category, product);
-    Alert.alert(
-      '🖥️ Build',
-      `${product.name} adicionado ao seu PC.\n\nDeseja ir para a tela de montagem?`,
-      [
-        { text: 'Continuar aqui', style: 'cancel' },
-        { text: 'Ver Build', onPress: () => navigation.navigate('PCBuild') },
-      ]
-    );
+    showToast(`🖥️ ${product.name} adicionado ao build`, 'info');
   };
 
   const checkCompatibility = async () => {
