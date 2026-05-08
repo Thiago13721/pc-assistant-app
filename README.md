@@ -204,7 +204,7 @@ Como obter as chaves:
 **Terminal 1 — Backend:**
 ```bash
 cd backend
-node server.js
+npm run dev
 ```
 
 **Terminal 2 — Mobile:**

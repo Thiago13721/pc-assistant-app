@@ -61,6 +61,13 @@ export function Home({ navigation }: Props) {
         <View style={styles.headerIcons}>
           <TouchableOpacity
             style={styles.iconBtn}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <MaterialCommunityIcons name="account-circle-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.iconBtn}
             onPress={() => navigation.navigate('Cart')}
           >
             <MaterialCommunityIcons name="cart-outline" size={24} color="#fff" />
@@ -74,7 +81,7 @@ export function Home({ navigation }: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.iconBtn}
+            style={[styles.iconBtn, { backgroundColor: '#ff444422' }]}
             onPress={() => navigation.navigate('Login')}
           >
             <MaterialCommunityIcons name="logout" size={24} color="#ff4444" />

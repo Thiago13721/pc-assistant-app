@@ -8,16 +8,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
- 
+import Markdown from 'react-native-markdown-display';
+
 type AIAssistantNavigationProp = StackNavigationProp<RootStackParamList, 'AIAssistant'>;
- 
+
 interface Props {
   navigation: AIAssistantNavigationProp;
 }
- 
+
 type BuildTier = 'low' | 'mid' | 'high' | null;
 type Step = 'tier' | 'budget' | 'custom' | 'result';
- 
+
 const TIERS = [
   {
     id: 'low' as BuildTier,
@@ -41,7 +42,28 @@ const TIERS = [
     color: '#f59e0b',
   },
 ];
- 
+
+const markdownStyles = {
+  body: { color: '#e4e4e7', fontSize: 15, lineHeight: 24 },
+  heading1: { color: '#ffffff', fontSize: 20, fontWeight: 'bold' as const, marginBottom: 8, marginTop: 16 },
+  heading2: { color: '#00d4ff', fontSize: 17, fontWeight: 'bold' as const, marginBottom: 6, marginTop: 14 },
+  heading3: { color: '#a1a1aa', fontSize: 15, fontWeight: 'bold' as const, marginBottom: 4, marginTop: 12 },
+  strong: { color: '#ffffff', fontWeight: 'bold' as const },
+  em: { color: '#a1a1aa', fontStyle: 'italic' as const },
+  bullet_list: { marginBottom: 8 },
+  ordered_list: { marginBottom: 8 },
+  list_item: { color: '#e4e4e7', marginBottom: 4 },
+  code_inline: { backgroundColor: '#1e1e1e', color: '#00d4ff', paddingHorizontal: 4, borderRadius: 4 },
+  fence: { backgroundColor: '#1e1e1e', padding: 12, borderRadius: 8, marginVertical: 8 },
+  blockquote: { backgroundColor: '#1a1a1a', borderLeftWidth: 3, borderLeftColor: '#00d4ff', paddingLeft: 12, marginVertical: 8 },
+  table: { borderWidth: 1, borderColor: '#2a2a2a', borderRadius: 8, marginVertical: 12, overflow: 'hidden' as const },
+  thead: { backgroundColor: '#1a1a1a' },
+  th: { color: '#00d4ff', fontWeight: 'bold' as const, padding: 10, borderRightWidth: 1, borderRightColor: '#2a2a2a' },
+  td: { color: '#e4e4e7', padding: 10, borderRightWidth: 1, borderRightColor: '#2a2a2a' },
+  tr: { borderBottomWidth: 1, borderBottomColor: '#2a2a2a' },
+  hr: { backgroundColor: '#2a2a2a', height: 1, marginVertical: 12 },
+};
+
 export function AIAssistant({ navigation }: Props) {
   const [step, setStep] = useState<Step>('tier');
   const [selectedTier, setSelectedTier] = useState<BuildTier>(null);
@@ -49,12 +71,12 @@ export function AIAssistant({ navigation }: Props) {
   const [customQuery, setCustomQuery] = useState('');
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
- 
+
   const handleTierSelect = (tier: BuildTier) => {
     setSelectedTier(tier);
     setStep('budget');
   };
- 
+
   const handleBudgetNext = () => {
     if (!budget.trim()) {
       Alert.alert('Atenção', 'Informe seu orçamento para continuar.');
@@ -62,18 +84,18 @@ export function AIAssistant({ navigation }: Props) {
     }
     setStep('custom');
   };
- 
+
   const handleConsult = async () => {
     setLoading(true);
     setStep('result');
- 
+
     const tierLabel = TIERS.find(t => t.id === selectedTier)?.label ?? '';
     const query = customQuery.trim()
       ? customQuery.trim()
       : `Monte um PC ${tierLabel} completo com orçamento de R$ ${budget}. Liste as peças recomendadas com justificativa técnica.`;
- 
+
     try {
-      const response = await fetch('http://10.0.2.2:3000/ask-ai', {
+      const response = await fetch('http://10.0.2.2:3000/api/ai/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -83,7 +105,7 @@ export function AIAssistant({ navigation }: Props) {
           tier: tierLabel,
         }),
       });
- 
+
       const data = await response.json();
       if (data?.answer) {
         setResult(data.answer);
@@ -96,7 +118,7 @@ export function AIAssistant({ navigation }: Props) {
       setLoading(false);
     }
   };
- 
+
   const reset = () => {
     setStep('tier');
     setSelectedTier(null);
@@ -104,9 +126,7 @@ export function AIAssistant({ navigation }: Props) {
     setCustomQuery('');
     setResult('');
   };
- 
-  // ── Render helpers ──────────────────────────────────────────────────────────
- 
+
   const renderStepIndicator = () => {
     const steps: Step[] = ['tier', 'budget', 'custom', 'result'];
     const currentIndex = steps.indexOf(step);
@@ -123,7 +143,7 @@ export function AIAssistant({ navigation }: Props) {
       </View>
     );
   };
- 
+
   const renderTierStep = () => (
     <View style={styles.stepContainer}>
       <Text style={styles.stepTitle}>Qual o nível do build?</Text>
@@ -147,7 +167,7 @@ export function AIAssistant({ navigation }: Props) {
       </View>
     </View>
   );
- 
+
   const renderBudgetStep = () => {
     const tier = TIERS.find(t => t.id === selectedTier);
     return (
@@ -157,15 +177,15 @@ export function AIAssistant({ navigation }: Props) {
             <MaterialCommunityIcons name="arrow-left" size={20} color="#a1a1aa" />
             <Text style={styles.backText}>Voltar</Text>
           </TouchableOpacity>
- 
+
           <View style={[styles.selectedBadge, { borderColor: tier?.color }]}>
             <MaterialCommunityIcons name={tier!.icon} size={18} color={tier?.color} />
             <Text style={[styles.selectedBadgeText, { color: tier?.color }]}>{tier?.label}</Text>
           </View>
- 
+
           <Text style={styles.stepTitle}>Qual o seu orçamento?</Text>
           <Text style={styles.stepSubtitle}>Valor total disponível para a montagem</Text>
- 
+
           <View style={styles.budgetInputWrapper}>
             <Text style={styles.currencySymbol}>R$</Text>
             <TextInput
@@ -178,7 +198,7 @@ export function AIAssistant({ navigation }: Props) {
               autoFocus
             />
           </View>
- 
+
           <TouchableOpacity style={styles.primaryBtn} onPress={handleBudgetNext} activeOpacity={0.8}>
             <Text style={styles.primaryBtnText}>Continuar</Text>
             <MaterialCommunityIcons name="arrow-right" size={20} color="#000" />
@@ -187,7 +207,7 @@ export function AIAssistant({ navigation }: Props) {
       </KeyboardAvoidingView>
     );
   };
- 
+
   const renderCustomStep = () => {
     const tier = TIERS.find(t => t.id === selectedTier);
     return (
@@ -197,7 +217,7 @@ export function AIAssistant({ navigation }: Props) {
             <MaterialCommunityIcons name="arrow-left" size={20} color="#a1a1aa" />
             <Text style={styles.backText}>Voltar</Text>
           </TouchableOpacity>
- 
+
           <View style={styles.summaryRow}>
             <View style={[styles.selectedBadge, { borderColor: tier?.color }]}>
               <MaterialCommunityIcons name={tier!.icon} size={16} color={tier?.color} />
@@ -208,10 +228,10 @@ export function AIAssistant({ navigation }: Props) {
               <Text style={styles.selectedBadgeText}>R$ {budget}</Text>
             </View>
           </View>
- 
+
           <Text style={styles.stepTitle}>Alguma preferência?</Text>
           <Text style={styles.stepSubtitle}>Opcional — deixe em branco para recomendação completa</Text>
- 
+
           <TextInput
             style={styles.customInput}
             placeholder="Ex: prefiro Intel, quero jogar 1440p, preciso de WiFi integrado..."
@@ -222,7 +242,7 @@ export function AIAssistant({ navigation }: Props) {
             numberOfLines={4}
             textAlignVertical="top"
           />
- 
+
           <TouchableOpacity style={styles.primaryBtn} onPress={handleConsult} activeOpacity={0.8}>
             <MaterialCommunityIcons name="robot" size={20} color="#000" />
             <Text style={styles.primaryBtnText}>Consultar IA</Text>
@@ -231,7 +251,7 @@ export function AIAssistant({ navigation }: Props) {
       </KeyboardAvoidingView>
     );
   };
- 
+
   const renderResultStep = () => {
     const tier = TIERS.find(t => t.id === selectedTier);
     return (
@@ -248,8 +268,9 @@ export function AIAssistant({ navigation }: Props) {
               <MaterialCommunityIcons name="check-circle" size={28} color="#4ade80" />
               <Text style={styles.resultTitle}>Build {tier?.label} — R$ {budget}</Text>
             </View>
-            <Text style={styles.resultText}>{result}</Text>
- 
+
+            <Markdown style={markdownStyles}>{result}</Markdown>
+
             <TouchableOpacity style={styles.resetBtn} onPress={reset} activeOpacity={0.8}>
               <MaterialCommunityIcons name="refresh" size={20} color="#000" />
               <Text style={styles.resetBtnText}>Nova consulta</Text>
@@ -259,12 +280,11 @@ export function AIAssistant({ navigation }: Props) {
       </View>
     );
   };
- 
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
- 
-      {/* Header */}
+
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerBack}>
           <MaterialCommunityIcons name="arrow-left" size={22} color="#fff" />
@@ -272,9 +292,9 @@ export function AIAssistant({ navigation }: Props) {
         <Text style={styles.headerTitle}>Assistente IA</Text>
         <View style={{ width: 38 }} />
       </View>
- 
+
       {renderStepIndicator()}
- 
+
       {step === 'tier' && renderTierStep()}
       {step === 'budget' && renderBudgetStep()}
       {step === 'custom' && renderCustomStep()}
@@ -282,43 +302,32 @@ export function AIAssistant({ navigation }: Props) {
     </SafeAreaView>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
- 
-  // Header
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16,
   },
   headerBack: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
- 
-  // Step indicator
   stepRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32, marginBottom: 28 },
   stepItem: { flexDirection: 'row', alignItems: 'center', flex: 1 },
   stepDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#333' },
   stepDotActive: { backgroundColor: '#00d4ff' },
   stepLine: { flex: 1, height: 2, backgroundColor: '#333', marginHorizontal: 4 },
   stepLineActive: { backgroundColor: '#00d4ff' },
- 
-  // Step container
   stepContainer: { flex: 1, paddingHorizontal: 24 },
   stepTitle: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 6 },
   stepSubtitle: { fontSize: 14, color: '#a1a1aa', marginBottom: 28 },
- 
-  // Tier cards
   tierList: { gap: 14 },
   tierCard: {
     flexDirection: 'row', alignItems: 'center', gap: 16,
-    backgroundColor: '#1a1a1a', borderRadius: 16, padding: 20,
-    borderWidth: 1,
+    backgroundColor: '#1a1a1a', borderRadius: 16, padding: 20, borderWidth: 1,
   },
   tierTextGroup: { flex: 1 },
   tierLabel: { fontSize: 18, fontWeight: 'bold' },
   tierDesc: { fontSize: 13, color: '#a1a1aa', marginTop: 2 },
- 
-  // Budget
   budgetInputWrapper: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#1e1e1e', borderRadius: 14,
@@ -326,15 +335,11 @@ const styles = StyleSheet.create({
   },
   currencySymbol: { fontSize: 22, color: '#00d4ff', fontWeight: 'bold', marginRight: 8 },
   budgetInput: { flex: 1, height: 60, fontSize: 22, color: '#fff', fontWeight: 'bold' },
- 
-  // Custom query
   customInput: {
     backgroundColor: '#1e1e1e', borderRadius: 14, padding: 16,
     color: '#fff', fontSize: 15, minHeight: 120, marginBottom: 28,
     borderWidth: 1, borderColor: '#333',
   },
- 
-  // Buttons
   primaryBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 10, backgroundColor: '#00d4ff', height: 56, borderRadius: 16,
@@ -342,8 +347,6 @@ const styles = StyleSheet.create({
   primaryBtnText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 20 },
   backText: { color: '#a1a1aa', fontSize: 14 },
- 
-  // Badges
   summaryRow: { flexDirection: 'row', gap: 10, marginBottom: 20 },
   selectedBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
@@ -351,17 +354,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12, paddingVertical: 6,
   },
   selectedBadgeText: { color: '#a1a1aa', fontSize: 13, fontWeight: '600' },
- 
-  // Loading
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
   loadingText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
   loadingSubText: { color: '#a1a1aa', fontSize: 14 },
- 
-  // Result
   resultScroll: { padding: 24, paddingBottom: 48 },
   resultHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20 },
   resultTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', flex: 1 },
-  resultText: { fontSize: 15, color: '#e4e4e7', lineHeight: 24 },
   resetBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 10, backgroundColor: '#00d4ff', height: 56, borderRadius: 16, marginTop: 32,
