@@ -20,7 +20,8 @@ import { Addresses } from './src/screens/Addresses';
 import { Security } from './src/screens/Security';
 import { Support } from './src/screens/Support';
 import { EditProfile } from './src/screens/EditProfile';
-
+import { Register } from './src/screens/Register';
+import { SavedBuilds } from './src/screens/SavedBuilds';
 export type RootStackParamList = {
   Login: undefined;
   Home: undefined;
@@ -36,6 +37,8 @@ export type RootStackParamList = {
   Security: undefined;
   Support: undefined;
   EditProfile: undefined;
+  Register: undefined;
+  SavedBuilds: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -67,6 +70,8 @@ export default function App() {
             <Stack.Screen name="Security" component={Security} />
             <Stack.Screen name="Support" component={Support} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="SavedBuilds" component={SavedBuilds} />
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>

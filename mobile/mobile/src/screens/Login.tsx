@@ -1,62 +1,126 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, Text, View, TextInput, TouchableOpacity, 
-  KeyboardAvoidingView, Platform, Alert, StatusBar, ActivityIndicator 
+import {
+  StyleSheet, Text, View, TextInput, TouchableOpacity,
+  KeyboardAvoidingView, Platform, StatusBar, ActivityIndicator, Alert
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import { useStore } from '../store/useStore';
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-
 interface Props { navigation: LoginScreenNavigationProp; }
 
 export function Login({ navigation }: Props) {
+  const setUser = useStore(state => state.setUser);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Erro', 'Preencha todos os campos.');
+      Alert.alert('Atenção', 'Preencha e-mail e senha.');
       return;
     }
+
     setLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      navigation.navigate('Home');
-    } catch (error) {
-      Alert.alert('Erro', 'Falha ao entrar.');
+      const response = await fetch('http://10.0.2.2:3000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        Alert.alert('Erro', data.error || 'Falha ao entrar.');
+        return;
+      }
+
+      setUser(data.user, data.token);
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    } catch {
+      Alert.alert('Erro de conexão', 'Verifique se o servidor está rodando.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <StatusBar barStyle="light-content" />
+
       <View style={styles.content}>
-        <View style={styles.header}>
+        {/* Logo */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoIconBox}>
+            <MaterialCommunityIcons name="desktop-tower" size={48} color="#00d4ff" />
+          </View>
           <Text style={styles.title}>PC Boost</Text>
-          <Text style={styles.subtitle}>Sua montagem com Gemini</Text>
+          <Text style={styles.subtitle}>Monte o PC dos seus sonhos</Text>
         </View>
 
-        <View style={styles.inputGroup}>
-          <TextInput 
-            style={styles.input} placeholder="E-mail" placeholderTextColor="#71717a"
-            value={email} onChangeText={setEmail} autoCapitalize="none"
-          />
-          <TextInput 
-            style={styles.input} placeholder="Senha" placeholderTextColor="#71717a"
-            value={password} onChangeText={setPassword} secureTextEntry
-          />
-          
-          <TouchableOpacity 
-            // CORREÇÃO: Usando ternário para evitar enviar 'false' ao invés de {}
-            style={[styles.button, { opacity: loading ? 0.7 : 1}]}
+        {/* Campos */}
+        <View style={styles.form}>
+          <View style={styles.inputWrapper}>
+            <MaterialCommunityIcons name="account-outline" size={20} color="#555" style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="E-mail"
+              placeholderTextColor="#555"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <MaterialCommunityIcons name="lock-outline" size={20} color="#555" style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder="Senha"
+              placeholderTextColor="#555"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
+              <MaterialCommunityIcons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={20} color="#555"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.forgotBtn}>
+            <Text style={styles.forgotText}>Esqueci minha senha</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.loginBtn, loading && styles.loginBtnDisabled]}
             onPress={handleSignIn}
             disabled={loading}
+            activeOpacity={0.8}
           >
-            {loading ? <ActivityIndicator color="#000" /> : <Text style={styles.buttonText}>Entrar</Text>}
+            {loading
+              ? <ActivityIndicator color="#000" />
+              : <Text style={styles.loginBtnText}>Entrar</Text>
+            }
+          </TouchableOpacity>
+        </View>
+
+        {/* Rodapé */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Não tem uma conta?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={styles.registerLink}>Criar conta</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -66,12 +130,38 @@ export function Login({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
-  content: { flex: 1, justifyContent: 'center', padding: 24 },
-  header: { alignItems: 'center', marginBottom: 48 },
-  title: { fontSize: 42, fontWeight: 'bold', color: '#00d4ff' },
-  subtitle: { fontSize: 14, color: '#a1a1aa' },
-  inputGroup: { width: '100%', gap: 16 },
-  input: { width: '100%', height: 60, backgroundColor: '#1e1e1e', borderRadius: 12, paddingHorizontal: 20, color: '#fff' },
-  button: { width: '100%', height: 60, backgroundColor: '#00d4ff', borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
-  buttonText: { color: '#000', fontSize: 18, fontWeight: 'bold' },
+  content: { flex: 1, justifyContent: 'center', paddingHorizontal: 28 },
+
+  logoContainer: { alignItems: 'center', marginBottom: 48 },
+  logoIconBox: {
+    width: 90, height: 90, borderRadius: 24,
+    backgroundColor: '#00d4ff11', borderWidth: 1, borderColor: '#00d4ff33',
+    justifyContent: 'center', alignItems: 'center', marginBottom: 16,
+  },
+  title: { fontSize: 36, fontWeight: 'bold', color: '#fff', letterSpacing: 1 },
+  subtitle: { fontSize: 14, color: '#a1a1aa', marginTop: 4 },
+
+  form: { gap: 14 },
+  inputWrapper: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: '#1e1e1e', borderRadius: 14,
+    borderWidth: 1, borderColor: '#2a2a2a', height: 56,
+  },
+  inputIcon: { marginLeft: 16, marginRight: 8 },
+  input: { flex: 1, color: '#fff', fontSize: 15, height: '100%' },
+  eyeBtn: { padding: 14 },
+
+  forgotBtn: { alignSelf: 'flex-end' },
+  forgotText: { color: '#555', fontSize: 13 },
+
+  loginBtn: {
+    backgroundColor: '#00d4ff', height: 56, borderRadius: 14,
+    justifyContent: 'center', alignItems: 'center', marginTop: 8,
+  },
+  loginBtnDisabled: { backgroundColor: '#00d4ff88' },
+  loginBtnText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
+
+  footer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, marginTop: 40 },
+  footerText: { color: '#a1a1aa', fontSize: 14 },
+  registerLink: { color: '#00d4ff', fontSize: 14, fontWeight: 'bold' },
 });

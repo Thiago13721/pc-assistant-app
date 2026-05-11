@@ -45,33 +45,25 @@ export function Checkout({ navigation }: Props) {
 
   const handleFinishOrder = () => {
     if (!selectedAddress) {
-      Alert.alert('Atenção', 'Selecione um endereço de entrega antes de continuar.');
+      Toast.show('Selecione ou cadastre um endereço para entrega.', { 
+        position: Toast.positions.TOP + 40, backgroundColor: '#1a1a1a', textColor: '#fff', containerStyle: { borderLeftWidth: 4, borderLeftColor: '#ff4444', borderRadius: 8, paddingHorizontal: 20 }
+      });
       return;
     }
+
     setIsProcessing(true);
+    
     setTimeout(() => {
-      setIsProcessing(false);
       addOrder(cart, finalTotal, paymentMethod);
+      setIsProcessing(false);
       clearCart();
-      Toast.show('🎉 Pedido confirmado! Acompanhe em Meus Pedidos.', {
-        duration: 3000,
-        position: Toast.positions.TOP,
-        shadow: true,
-        animation: true,
-        backgroundColor: '#1a1a1a',
-        textColor: '#4ade80',
-        opacity: 1,
-        containerStyle: {
-          borderWidth: 1,
-          borderColor: '#4ade80',
-          borderRadius: 12,
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          marginTop: 50,
-        },
-        onHidden: () => navigation.reset({ index: 0, routes: [{ name: 'Home' }] }),
+      
+      Toast.show('Pedido Confirmado! 🎉', { 
+        position: Toast.positions.TOP + 40, backgroundColor: '#1a1a1a', textColor: '#fff', containerStyle: { borderLeftWidth: 4, borderLeftColor: '#4ade80', borderRadius: 8, paddingHorizontal: 20 }
       });
-   }, 1500);
+
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    }, 1500);
   };
 
   if (cart.length === 0) {

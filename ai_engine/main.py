@@ -78,6 +78,7 @@ def get_hardware_advice(category: str, user_query: str = "", budget: str = "", t
             f"3. Compatibilidade entre as peças\n"
             f"4. Desempenho esperado (jogos, trabalho, etc.)\n"
             f"Responda em português do Brasil, de forma clara e organizada."
+            f"NÃO use markdown, asteriscos, hashtags ou formatação especial. Use apenas texto simples com quebras de linha."
         )
     else:
         # Consulta rápida pelos cards da Home

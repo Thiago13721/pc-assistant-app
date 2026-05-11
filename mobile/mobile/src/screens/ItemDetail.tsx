@@ -87,7 +87,7 @@ const showToast = (message: string, type: 'success' | 'info' | 'error') => {
     setAiLoading(true);
     setAiResult('');
     try {
-      const response = await fetch('http://10.0.2.2:3000/ask-ai', {
+      const response = await fetch('http://10.0.2.2:3000/api/ai/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -96,7 +96,14 @@ const showToast = (message: string, type: 'success' | 'info' | 'error') => {
         }),
       });
       const data = await response.json();
-      setAiResult(data?.answer ?? 'Não foi possível obter análise.');
+      const rawText = data?.answer ?? 'Não foi possível obter análise.';
+      const cleanText = rawText
+        .replace(/\*\*/g, '')      
+        .replace(/\*/g, '')        
+        .replace(/#{1,6}\s/g, '')  
+        .replace(/`/g, '');        
+      setAiResult(cleanText);
+      
     } catch {
       setAiResult('Erro de conexão. Verifique se o servidor está rodando.');
     } finally {

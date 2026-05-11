@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { useStore } from '../store/useStore'; // <-- Zustand
+import { useStore } from '../store/useStore';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -31,19 +31,16 @@ const CATEGORIES: CategoryItem[] = [
 ];
 
 export function Home({ navigation }: Props) {
-  const [loading, setLoading] = useState(false);
-  
-  // Lendo do Zustand
+  // BUSCA O USUÁRIO DA STORE
+  const user = useStore(state => state.user);
   const cart = useStore(state => state.cart);
-  const cartItemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const renderCategory = ({ item }: { item: CategoryItem }) => (
-    <TouchableOpacity
+    <TouchableOpacity 
       style={styles.categoryCard}
-      activeOpacity={0.7}
       onPress={() => navigation.navigate('Category', { categoryName: item.title })}
     >
-      <MaterialCommunityIcons name={item.icon} size={40} color="#00d4ff" />
+      <MaterialCommunityIcons name={item.icon} size={40} color="#4a128b" />
       <Text style={styles.categoryTitle}>{item.title}</Text>
     </TouchableOpacity>
   );
@@ -51,81 +48,66 @@ export function Home({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
-
+      
       <View style={styles.header}>
-        <View>
-          <Text style={styles.welcome}>Olá, Thiago</Text>
-          <Text style={styles.subtitle}>O que vamos montar hoje?</Text>
-        </View>
-
-        <View style={styles.headerIcons}>
-          <TouchableOpacity
-            style={styles.iconBtn}
-            onPress={() => navigation.navigate('Profile')}
-          >
-            <MaterialCommunityIcons name="account-circle-outline" size={24} color="#fff" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.iconBtn}
-            onPress={() => navigation.navigate('Cart')}
-          >
-            <MaterialCommunityIcons name="cart-outline" size={24} color="#fff" />
-            {cartItemCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                  {cartItemCount > 9 ? '9+' : cartItemCount}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.iconBtn, { backgroundColor: '#ff444422' }]}
-            onPress={() => navigation.navigate('Login')}
-          >
-            <MaterialCommunityIcons name="logout" size={24} color="#ff4444" />
-          </TouchableOpacity>
+        <View style={styles.headerContent}>
+          <View>
+            <Text style={styles.greeting}>Olá,</Text>
+            {/* EXIBE O NOME DO USUÁRIO OU VISITANTE */}
+            <Text style={styles.userName}>{user?.name?.split(' ')[0] || 'Visitante'}</Text>
+          </View>
+          <View style={styles.headerActions}>
+            <TouchableOpacity 
+              style={styles.iconBtn} 
+              onPress={() => navigation.navigate('Cart')}
+            >
+              <MaterialCommunityIcons name="cart-outline" size={24} color="#fff" />
+              {cart.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{cart.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.iconBtn} 
+              onPress={() => navigation.navigate('Profile')}
+            >
+              <MaterialCommunityIcons name="account-circle-outline" size={24} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#00d4ff" />
-          <Text style={styles.loadingText}>A IA está pensando...</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={CATEGORIES}
-          keyExtractor={(item) => item.id}
-          renderItem={renderCategory}
-          numColumns={2}
-          contentContainerStyle={styles.listContent}
-          columnWrapperStyle={styles.columnWrapper}
-        />
-      )}
+      <FlatList
+        data={CATEGORIES}
+        keyExtractor={(item) => item.id}
+        renderItem={renderCategory}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
+        contentContainerStyle={styles.listContent}
+        ListHeaderComponent={() => (
+          <View style={styles.heroSection}>
+            <Text style={styles.heroTitle}>O que vamos montar hoje?</Text>
+            <Text style={styles.heroSubtitle}>Escolha uma categoria para começar</Text>
+          </View>
+        )}
+      />
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.buildButton, { opacity: loading ? 0.5 : 1 }]}
-          activeOpacity={0.8}
-          disabled={loading}
+        <TouchableOpacity 
+          style={styles.buildButton}
           onPress={() => navigation.navigate('PCBuild')}
         >
-          <MaterialCommunityIcons name="desktop-tower" size={22} color="#000" />
+          <MaterialCommunityIcons name="tools" size={20} color="#000" />
           <Text style={styles.buildButtonText}>Montar PC</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.aiButton, { opacity: loading ? 0.5 : 1 }]}
-          activeOpacity={0.8}
-          disabled={loading}
+        
+        <TouchableOpacity 
+          style={styles.aiButton}
           onPress={() => navigation.navigate('AIAssistant')}
         >
-          <MaterialCommunityIcons name="robot" size={22} color="#000" />
-          <Text style={styles.aiButtonText}>
-            {loading ? 'Pensando...' : 'IA'}
-          </Text>
+          <MaterialCommunityIcons name="robot" size={20} color="#fff" />
+          <Text style={styles.aiButtonText}>Assistente IA</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -134,21 +116,22 @@ export function Home({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#121212' },
-  header: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: 24, paddingTop: 10, paddingBottom: 20,
-  },
-  welcome: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
-  subtitle: { fontSize: 14, color: '#a1a1aa' },
-  headerIcons: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  header: { paddingHorizontal: 20, paddingTop: 10, marginBottom: 20 },
+  headerContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  greeting: { color: '#a1a1aa', fontSize: 14 },
+  userName: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
+  headerActions: { flexDirection: 'row', gap: 12 },
   iconBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 12, position: 'relative' },
   badge: {
     position: 'absolute', top: 2, right: 2,
-    backgroundColor: '#00d4ff', borderRadius: 8,
+    backgroundColor: '#00ccff', borderRadius: 8,
     minWidth: 16, height: 16, justifyContent: 'center', alignItems: 'center',
     paddingHorizontal: 3,
   },
   badgeText: { color: '#000', fontSize: 9, fontWeight: 'bold' },
+  heroSection: { marginVertical: 20 },
+  heroTitle: { color: '#fff', fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
+  heroSubtitle: { color: '#a1a1aa', fontSize: 14 },
   listContent: { paddingHorizontal: 20 },
   columnWrapper: { justifyContent: 'space-between', marginBottom: 16 },
   categoryCard: {
@@ -160,14 +143,13 @@ const styles = StyleSheet.create({
   buttonContainer: { flexDirection: 'row', paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   buildButton: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, backgroundColor: '#f59e0b', height: 56, borderRadius: 16,
+    gap: 8, backgroundColor: '#cec111', height: 56, borderRadius: 16,
   },
-  buildButtonText: { color: '#000', fontSize: 15, fontWeight: 'bold' },
+  buildButtonText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
   aiButton: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, backgroundColor: '#00d4ff', height: 56, borderRadius: 16,
+    gap: 8, backgroundColor: '#1f1958', height: 56, borderRadius: 16,
+    borderWidth: 1, borderColor: '#333',
   },
-  aiButtonText: { color: '#000', fontSize: 15, fontWeight: 'bold' },
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  loadingText: { color: '#fff', marginTop: 10 },
+  aiButtonText: { color: '#f1f1f1', fontSize: 16, fontWeight: 'bold' },
 });
