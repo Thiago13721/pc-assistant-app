@@ -321,24 +321,24 @@ const styles = StyleSheet.create({
 
   card: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#1a1a1a', borderRadius: 16, padding: 16,
+    backgroundColor: '#002f64', borderRadius: 16, padding: 16,
     borderWidth: 1, borderColor: '#2a2a2a', marginBottom: 12,
   },
-  cardSelected: { borderColor: '#00d4ff', backgroundColor: '#00d4ff0a' },
+  cardSelected: { borderColor: '#000000', backgroundColor: '#00d4ff0a' },
   cardLeft: { flex: 1, flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   cardIconBox: {
     width: 40, height: 40, borderRadius: 10, backgroundColor: '#111',
     justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#2a2a2a',
   },
-  cardIconBoxSelected: { borderColor: '#00d4ff', backgroundColor: '#00d4ff11' },
+  cardIconBoxSelected: { borderColor: '#000000', backgroundColor: '#00d4ff11' },
   cardInfo: { flex: 1 },
   cardTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 },
   cardLabel: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
   cardLabelSelected: { color: '#00d4ff' },
   selectedBadge: { backgroundColor: '#00d4ff22', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
   selectedBadgeText: { color: '#00d4ff', fontSize: 11, fontWeight: 'bold' },
-  cardText: { color: '#a1a1aa', fontSize: 13, marginBottom: 2 },
-  cardCEP: { color: '#555', fontSize: 12, marginTop: 2 },
+  cardText: { color: '#fbfbfc', fontSize: 13, marginBottom: 2 },
+  cardCEP: { color: '#f8f8f8', fontSize: 12, marginTop: 2 },
   removeBtn: { padding: 8, backgroundColor: '#ff444422', borderRadius: 8 },
 
   emptyContainer: { alignItems: 'center', marginTop: 80, gap: 12 },
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   },
   addBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    backgroundColor: '#00d4ff', height: 52, borderRadius: 14, gap: 8,
+    backgroundColor: '#0f93b4', height: 52, borderRadius: 14, gap: 8,
   },
   addBtnText: { color: '#000', fontWeight: 'bold', fontSize: 15 },
 
