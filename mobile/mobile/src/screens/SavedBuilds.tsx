@@ -107,7 +107,7 @@ export function SavedBuilds({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20 },
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },

@@ -248,7 +248,7 @@ export function Register({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#041449' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 52, paddingBottom: 16,
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
   scroll: { paddingHorizontal: 24, paddingBottom: 48 },
-  sectionLabel: { fontSize: 12, fontWeight: 'bold', color: '#555', marginBottom: 12, letterSpacing: 1 },
+  sectionLabel: { fontSize: 12, fontWeight: 'bold', color: '#faf9f9', marginBottom: 12, letterSpacing: 1 },
   inputWrapper: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#1e1e1e', borderRadius: 14,
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   input: { flex: 1, color: '#fff', fontSize: 15, height: '100%' },
   eyeBtn: { padding: 14 },
   registerBtn: {
-    backgroundColor: '#00d4ff', height: 56, borderRadius: 14,
+    backgroundColor: '#00aeff', height: 56, borderRadius: 14,
     justifyContent: 'center', alignItems: 'center', marginTop: 24,
   },
   registerBtnDisabled: { backgroundColor: '#00d4ff88' },

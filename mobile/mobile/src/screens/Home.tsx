@@ -40,7 +40,7 @@ export function Home({ navigation }: Props) {
       style={styles.categoryCard}
       onPress={() => navigation.navigate('Category', { categoryName: item.title })}
     >
-      <MaterialCommunityIcons name={item.icon} size={40} color="#4a128b" />
+      <MaterialCommunityIcons name={item.icon} size={40} color="#0084ff" />
       <Text style={styles.categoryTitle}>{item.title}</Text>
     </TouchableOpacity>
   );
@@ -61,7 +61,7 @@ export function Home({ navigation }: Props) {
               style={styles.iconBtn} 
               onPress={() => navigation.navigate('Cart')}
             >
-              <MaterialCommunityIcons name="cart-outline" size={24} color="#fff" />
+              <MaterialCommunityIcons name="cart-outline" size={24} color="#34ecc4" />
               {cart.length > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{cart.length}</Text>
@@ -72,7 +72,7 @@ export function Home({ navigation }: Props) {
               style={styles.iconBtn} 
               onPress={() => navigation.navigate('Profile')}
             >
-              <MaterialCommunityIcons name="account-circle-outline" size={24} color="#fff" />
+              <MaterialCommunityIcons name="account-circle-outline" size={24} color="#34ecc4" />
             </TouchableOpacity>
           </View>
         </View>
@@ -98,7 +98,7 @@ export function Home({ navigation }: Props) {
           style={styles.buildButton}
           onPress={() => navigation.navigate('PCBuild')}
         >
-          <MaterialCommunityIcons name="tools" size={20} color="#000" />
+          <MaterialCommunityIcons name="tools" size={20} color="#ffffff" />
           <Text style={styles.buildButtonText}>Montar PC</Text>
         </TouchableOpacity>
         
@@ -106,7 +106,7 @@ export function Home({ navigation }: Props) {
           style={styles.aiButton}
           onPress={() => navigation.navigate('AIAssistant')}
         >
-          <MaterialCommunityIcons name="robot" size={20} color="#fff" />
+          <MaterialCommunityIcons name="robot" size={20} color="#ffffff" />
           <Text style={styles.aiButtonText}>Assistente IA</Text>
         </TouchableOpacity>
       </View>
@@ -115,40 +115,40 @@ export function Home({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: { paddingHorizontal: 20, paddingTop: 10, marginBottom: 20 },
   headerContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  greeting: { color: '#a1a1aa', fontSize: 14 },
-  userName: { color: '#fff', fontSize: 20, fontWeight: 'bold' },
+  greeting: { color: '#ffffff', fontSize: 18 },
+  userName: { color: '#fff', fontSize: 25, fontWeight: 'bold' },
   headerActions: { flexDirection: 'row', gap: 12 },
-  iconBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 12, position: 'relative' },
+  iconBtn: { padding: 8, backgroundColor: '#185c8a', borderRadius: 12, position: 'relative' },
   badge: {
     position: 'absolute', top: 2, right: 2,
     backgroundColor: '#00ccff', borderRadius: 8,
     minWidth: 16, height: 16, justifyContent: 'center', alignItems: 'center',
     paddingHorizontal: 3,
   },
-  badgeText: { color: '#000', fontSize: 9, fontWeight: 'bold' },
+  badgeText: { color: '#000000', fontSize: 9, fontWeight: 'bold' },
   heroSection: { marginVertical: 20 },
   heroTitle: { color: '#fff', fontSize: 24, fontWeight: 'bold', marginBottom: 4 },
-  heroSubtitle: { color: '#a1a1aa', fontSize: 14 },
+  heroSubtitle: { color: '#ffffff', fontSize: 16 },
   listContent: { paddingHorizontal: 20 },
   columnWrapper: { justifyContent: 'space-between', marginBottom: 16 },
   categoryCard: {
     backgroundColor: '#1e1e1e', width: '48%', aspectRatio: 1,
     borderRadius: 20, justifyContent: 'center', alignItems: 'center',
-    borderWidth: 1, borderColor: '#333',
+    borderWidth: 1, borderColor: '#1ec3c9d8',
   },
   categoryTitle: { color: '#fff', marginTop: 12, fontSize: 14, fontWeight: 'bold' },
   buttonContainer: { flexDirection: 'row', paddingHorizontal: 24, paddingBottom: 24, gap: 12 },
   buildButton: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, backgroundColor: '#cec111', height: 56, borderRadius: 16,
+    gap: 8, backgroundColor: '#3f1986', height: 56, borderRadius: 16,
   },
-  buildButtonText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
+  buildButtonText: { color: '#ffffff', fontSize: 16, fontWeight: 'bold' },
   aiButton: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 8, backgroundColor: '#1f1958', height: 56, borderRadius: 16,
+    gap: 8, backgroundColor: '#17b8d4d3', height: 56, borderRadius: 16,
     borderWidth: 1, borderColor: '#333',
   },
   aiButtonText: { color: '#f1f1f1', fontSize: 16, fontWeight: 'bold' },

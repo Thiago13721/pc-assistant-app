@@ -138,7 +138,7 @@ export function Profile({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20 },
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
@@ -146,18 +146,18 @@ const styles = StyleSheet.create({
   profileCard: { alignItems: 'center', paddingVertical: 20 },
   avatar: { width: 100, height: 100, borderRadius: 50, borderWidth: 2, borderColor: '#00d4ff', marginBottom: 16 },
   name: { fontSize: 22, fontWeight: 'bold', color: '#fff', marginBottom: 4 },
-  email: { fontSize: 14, color: '#a1a1aa', marginBottom: 16 },
+  email: { fontSize: 14, color: '#f7f7f8', marginBottom: 16 },
   editBtn: { paddingHorizontal: 24, paddingVertical: 10, backgroundColor: '#1e1e1e', borderRadius: 20, borderWidth: 1, borderColor: '#333' },
   editBtnText: { color: '#00d4ff', fontWeight: 'bold', fontSize: 14 },
 
   statsContainer: { flexDirection: 'row', backgroundColor: '#1a1a1a', marginHorizontal: 20, borderRadius: 20, paddingVertical: 20, marginBottom: 30, borderWidth: 1, borderColor: '#2a2a2a' },
   statBox: { flex: 1, alignItems: 'center' },
   statNumber: { fontSize: 20, fontWeight: 'bold', color: '#00d4ff', marginBottom: 4 },
-  statLabel: { fontSize: 12, color: '#a1a1aa' },
+  statLabel: { fontSize: 12, color: '#f4f4f8' },
   statDivider: { width: 1, backgroundColor: '#2a2a2a' },
 
   section: { paddingHorizontal: 20, marginBottom: 24 },
-  sectionTitle: { fontSize: 14, fontWeight: 'bold', color: '#555', marginBottom: 12, textTransform: 'uppercase' },
+  sectionTitle: { fontSize: 14, fontWeight: 'bold', color: '#faf9f9', marginBottom: 12, textTransform: 'uppercase' },
   optionsGroup: { backgroundColor: '#1a1a1a', borderRadius: 16, borderWidth: 1, borderColor: '#2a2a2a', overflow: 'hidden' },
   optionBtn: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 14 },
   optionIconBox: { width: 36, height: 36, borderRadius: 10, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#2a2a2a' },
@@ -168,5 +168,5 @@ const styles = StyleSheet.create({
 
   logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginHorizontal: 20, marginTop: 10, padding: 16, backgroundColor: '#ff444415', borderRadius: 16, borderWidth: 1, borderColor: '#ff444433' },
   logoutText: { color: '#ff4444', fontWeight: 'bold', fontSize: 15 },
-  version: { textAlign: 'center', color: '#333', fontSize: 12, marginVertical: 30 },
+  version: { textAlign: 'center', color: '#cdcdce', fontSize: 12, marginVertical: 30 },
 });

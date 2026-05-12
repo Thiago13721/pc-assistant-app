@@ -341,7 +341,7 @@ export function PCBuild({ navigation }: Props) {
           <MaterialCommunityIcons
             name={isComplete ? 'cart-check' : 'cart-arrow-right'}
             size={22}
-            color="#000"
+            color="#000000"
           />
           <Text style={styles.finalizeBtnText}>
             {isComplete ? 'Ir para o carrinho' : 'Finalizar assim'}
@@ -403,7 +403,7 @@ export function PCBuild({ navigation }: Props) {
                 <Text style={styles.modalCancelText}>Voltar</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.modalSaveBtn, { backgroundColor: '#db9a0e' }]} onPress={goToCart} activeOpacity={0.8}>
-                <Text style={[styles.modalSaveText, { color: '#000000' }]}>Finalizar</Text>
+                <Text style={[styles.modalSaveText, { color: '#1d1b1b' }]}>Finalizar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -415,18 +415,18 @@ export function PCBuild({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16,
   },
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
-  saveBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
+  saveBtn: { padding: 8, backgroundColor: '#221f1f', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
   scroll: { paddingBottom: 16 },
   progressSection: { paddingHorizontal: 20, marginBottom: 24 },
   progressRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 },
-  progressLabel: { color: '#a1a1aa', fontSize: 13 },
+  progressLabel: { color: '#ffffff', fontSize: 13 },
   completeBadge: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   completeText: { color: '#4ade80', fontSize: 13, fontWeight: 'bold' },
   progressBar: { height: 6, backgroundColor: '#1e1e1e', borderRadius: 3 },
@@ -442,19 +442,19 @@ const styles = StyleSheet.create({
   slotCardOptional: { opacity: 0.6 },
   slotIconBox: {
     width: 44, height: 44, borderRadius: 12,
-    backgroundColor: '#111', justifyContent: 'center', alignItems: 'center',
+    backgroundColor: '#111111', justifyContent: 'center', alignItems: 'center',
     borderWidth: 1, borderColor: '#2a2a2a',
   },
   slotIconBoxFilled: { backgroundColor: '#4ade8011', borderColor: '#4ade8033' },
   slotBody: { flex: 1 },
   slotLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 2 },
-  slotLabel: { fontSize: 13, color: '#a1a1aa', fontWeight: '600' },
+  slotLabel: { fontSize: 13, color: '#c1c1ce', fontWeight: '600' },
   optionalTag: {
-    fontSize: 10, color: '#555', backgroundColor: '#2a2a2a',
+    fontSize: 10, color: '#dbdbdb', backgroundColor: '#2a2a2a',
     paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4,
   },
   slotProductName: { fontSize: 14, color: '#fff', fontWeight: 'bold', marginBottom: 2 },
-  slotEmpty: { fontSize: 13, color: '#444', fontStyle: 'italic' },
+  slotEmpty: { fontSize: 13, color: '#e4dddd', fontStyle: 'italic' },
   slotPrice: { fontSize: 13, color: '#00d4ff', fontWeight: '600' },
   slotActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   removeBtn: { padding: 4, backgroundColor: '#ff444422', borderRadius: 6 },
@@ -466,12 +466,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 10, backgroundColor: '#00d4ff', height: 50, borderRadius: 14,
   },
-  aiTriggerText: { color: '#000', fontWeight: 'bold', fontSize: 15 },
+  aiTriggerText: { color: '#000000', fontWeight: 'bold', fontSize: 15 },
   aiLoadingBox: {
     flexDirection: 'row', alignItems: 'center', gap: 12,
     backgroundColor: '#1e1e1e', borderRadius: 12, padding: 16,
   },
-  aiLoadingText: { color: '#a1a1aa', fontSize: 14 },
+  aiLoadingText: { color: '#fafafd', fontSize: 14 },
   aiResultBox: {
     backgroundColor: '#1a1a1a', borderRadius: 14, padding: 16,
     borderWidth: 1, borderColor: '#00d4ff33',
@@ -481,21 +481,21 @@ const styles = StyleSheet.create({
   aiResultText: { color: '#e4e4e7', fontSize: 14, lineHeight: 22 },
   footer: {
     position: 'absolute', bottom: 0, left: 0, right: 0,
-    backgroundColor: '#171717', borderTopWidth: 1, borderTopColor: '#2a2a2a',
+    backgroundColor: '#0b5166', borderTopWidth: 1, borderTopColor: '#2a2a2a',
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 28, gap: 16,
   },
   footerTotal: { flex: 1 },
-  footerTotalLabel: { fontSize: 11, color: '#555', marginBottom: 2 },
+  footerTotalLabel: { fontSize: 11, color: '#f3e8e8', marginBottom: 2 },
   footerTotalValue: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-  footerPieceCount: { fontSize: 11, color: '#a1a1aa' },
+  footerPieceCount: { fontSize: 11, color: '#dfdfe7' },
   finalizeBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
     backgroundColor: '#00d4ff', paddingHorizontal: 20,
     height: 52, borderRadius: 14,
   },
   finalizeBtnIncomplete: { backgroundColor: '#f59e0b' },
-  finalizeBtnText: { color: '#000', fontWeight: 'bold', fontSize: 15 },
+  finalizeBtnText: { color: '#000000', fontWeight: 'bold', fontSize: 15 },
   modalOverlay: {
     flex: 1, backgroundColor: '#000000aa',
     justifyContent: 'center', alignItems: 'center', padding: 24,
@@ -506,9 +506,9 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#2a2a2a',
   },
   modalTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', marginBottom: 4 },
-  modalSubtitle: { fontSize: 13, color: '#a1a1aa', marginBottom: 20 },
+  modalSubtitle: { fontSize: 13, color: '#eaeaf3', marginBottom: 20 },
   modalInput: {
-    backgroundColor: '#111', borderRadius: 12, borderWidth: 1, borderColor: '#2a2a2a',
+    backgroundColor: '#111111', borderRadius: 12, borderWidth: 1, borderColor: '#2a2a2a',
     paddingHorizontal: 14, paddingVertical: 12, color: '#fff', fontSize: 15, marginBottom: 20,
   },
   modalActions: { flexDirection: 'row', gap: 12 },
@@ -516,10 +516,10 @@ const styles = StyleSheet.create({
     flex: 1, height: 48, borderRadius: 12, justifyContent: 'center', alignItems: 'center',
     backgroundColor: '#2a2a2a',
   },
-  modalCancelText: { color: '#a1a1aa', fontWeight: 'bold' },
+  modalCancelText: { color: '#9e9ea3', fontWeight: 'bold' },
   modalSaveBtn: {
     flex: 1, height: 48, borderRadius: 12, justifyContent: 'center', alignItems: 'center',
     backgroundColor: '#00d4ff',
   },
-  modalSaveText: { color: '#000', fontWeight: 'bold' },
+  modalSaveText: { color: '#000000', fontWeight: 'bold' },
 });

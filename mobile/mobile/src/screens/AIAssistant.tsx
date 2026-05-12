@@ -214,7 +214,7 @@ export function AIAssistant({ navigation }: Props) {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
         <View style={styles.stepContainer}>
           <TouchableOpacity style={styles.backBtn} onPress={() => setStep('budget')}>
-            <MaterialCommunityIcons name="arrow-left" size={20} color="#a1a1aa" />
+            <MaterialCommunityIcons name="arrow-left" size={20} color="#ffffff" />
             <Text style={styles.backText}>Voltar</Text>
           </TouchableOpacity>
 
@@ -224,7 +224,7 @@ export function AIAssistant({ navigation }: Props) {
               <Text style={[styles.selectedBadgeText, { color: tier?.color }]}>{tier?.label}</Text>
             </View>
             <View style={styles.selectedBadge}>
-              <MaterialCommunityIcons name="currency-brl" size={16} color="#a1a1aa" />
+              <MaterialCommunityIcons name="currency-brl" size={16} color="#ffffff" />
               <Text style={styles.selectedBadgeText}>R$ {budget}</Text>
             </View>
           </View>
@@ -235,7 +235,7 @@ export function AIAssistant({ navigation }: Props) {
           <TextInput
             style={styles.customInput}
             placeholder="Ex: prefiro Intel, quero jogar 1440p, preciso de WiFi integrado..."
-            placeholderTextColor="#555"
+            placeholderTextColor="#555555"
             value={customQuery}
             onChangeText={setCustomQuery}
             multiline
@@ -304,7 +304,7 @@ export function AIAssistant({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16,
@@ -313,13 +313,13 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
   stepRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 32, marginBottom: 28 },
   stepItem: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  stepDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#333' },
+  stepDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#333333' },
   stepDotActive: { backgroundColor: '#00d4ff' },
-  stepLine: { flex: 1, height: 2, backgroundColor: '#333', marginHorizontal: 4 },
+  stepLine: { flex: 1, height: 2, backgroundColor: '#333333', marginHorizontal: 4 },
   stepLineActive: { backgroundColor: '#00d4ff' },
   stepContainer: { flex: 1, paddingHorizontal: 24 },
   stepTitle: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginBottom: 6 },
-  stepSubtitle: { fontSize: 14, color: '#a1a1aa', marginBottom: 28 },
+  stepSubtitle: { fontSize: 14, color: '#ffffff', marginBottom: 28 },
   tierList: { gap: 14 },
   tierCard: {
     flexDirection: 'row', alignItems: 'center', gap: 16,
@@ -327,18 +327,18 @@ const styles = StyleSheet.create({
   },
   tierTextGroup: { flex: 1 },
   tierLabel: { fontSize: 18, fontWeight: 'bold' },
-  tierDesc: { fontSize: 13, color: '#a1a1aa', marginTop: 2 },
+  tierDesc: { fontSize: 13, color: '#fcfcff', marginTop: 2 },
   budgetInputWrapper: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#1e1e1e', borderRadius: 14,
-    paddingHorizontal: 20, marginBottom: 28, borderWidth: 1, borderColor: '#333',
+    paddingHorizontal: 20, marginBottom: 28, borderWidth: 1, borderColor: '#333333',
   },
   currencySymbol: { fontSize: 22, color: '#00d4ff', fontWeight: 'bold', marginRight: 8 },
   budgetInput: { flex: 1, height: 60, fontSize: 22, color: '#fff', fontWeight: 'bold' },
   customInput: {
     backgroundColor: '#1e1e1e', borderRadius: 14, padding: 16,
     color: '#fff', fontSize: 15, minHeight: 120, marginBottom: 28,
-    borderWidth: 1, borderColor: '#333',
+    borderWidth: 1, borderColor: '#3bdcf1',
   },
   primaryBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
@@ -346,17 +346,17 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: { color: '#000', fontSize: 16, fontWeight: 'bold' },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 20 },
-  backText: { color: '#a1a1aa', fontSize: 14 },
+  backText: { color: '#ffffff', fontSize: 14 },
   summaryRow: { flexDirection: 'row', gap: 10, marginBottom: 20 },
   selectedBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 6,
-    borderWidth: 1, borderColor: '#555', borderRadius: 20,
+    borderWidth: 1, borderColor: '#ffffff', borderRadius: 20,
     paddingHorizontal: 12, paddingVertical: 6,
   },
-  selectedBadgeText: { color: '#a1a1aa', fontSize: 13, fontWeight: '600' },
+  selectedBadgeText: { color: '#fafafa', fontSize: 13, fontWeight: '600' },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
   loadingText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  loadingSubText: { color: '#a1a1aa', fontSize: 14 },
+  loadingSubText: { color: '#ffffff', fontSize: 14 },
   resultScroll: { padding: 24, paddingBottom: 48 },
   resultHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 20 },
   resultTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff', flex: 1 },

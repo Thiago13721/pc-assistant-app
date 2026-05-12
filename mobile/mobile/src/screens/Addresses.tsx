@@ -169,9 +169,7 @@ export function Addresses({ navigation }: Props) {
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Endereços de Entrega</Text>
-        <TouchableOpacity onPress={openModal} style={styles.addBtnHeader}>
-          <MaterialCommunityIcons name="plus" size={24} color="#00d4ff" />
-        </TouchableOpacity>
+        <View style={{ width: 40 }} />
       </View>
 
       <FlatList
@@ -314,7 +312,7 @@ export function Addresses({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 20 },
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },

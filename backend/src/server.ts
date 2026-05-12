@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import aiRoutes from './routes/aiRoutes';
+import priceRoutes from './routes/priceRoutes';
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/ai', aiRoutes);
-
+app.use('/api/price', priceRoutes);
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', database: 'connected' });
 });

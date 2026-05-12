@@ -167,7 +167,7 @@ export function Cart({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#121212' },
+  container: { flex: 1, backgroundColor: '#354cb3' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   backBtn: { padding: 8, backgroundColor: '#1e1e1e', borderRadius: 10 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
   clearBtn: { padding: 8, backgroundColor: '#ff444422', borderRadius: 10 },
-  countText: { color: '#555', fontSize: 13, paddingHorizontal: 24, marginBottom: 10 },
+  countText: { color: '#ffffff', fontSize: 13, paddingHorizontal: 24, marginBottom: 10 },
   listContent: { paddingHorizontal: 20, paddingBottom: 120 },
   card: {
     flexDirection: 'row', backgroundColor: '#1a1a1a',
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   cardImage: { width: 80, height: 80, borderRadius: 10, backgroundColor: '#111' },
   cardBody: { flex: 1, justifyContent: 'space-between' },
-  cardCategory: { fontSize: 11, color: '#555', marginBottom: 2 },
+  cardCategory: { fontSize: 11, color: '#fdfbfb', marginBottom: 2 },
   cardName: { fontSize: 14, fontWeight: 'bold', color: '#fff', marginBottom: 4 },
   cardPrice: { fontSize: 13, color: '#00d4ff', fontWeight: '600', marginBottom: 8 },
   qtyRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   removeBtn: { padding: 4, backgroundColor: '#ff444422', borderRadius: 8 },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 12 },
   emptyTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-  emptySubtitle: { fontSize: 14, color: '#555' },
+  emptySubtitle: { fontSize: 14, color: '#f7f1f1' },
   emptyBtn: {
     marginTop: 8, backgroundColor: '#00d4ff',
     paddingHorizontal: 28, paddingVertical: 14, borderRadius: 14,
@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, paddingVertical: 16, paddingBottom: 28, gap: 16,
   },
   footerTotal: { flex: 1 },
-  footerTotalLabel: { fontSize: 11, color: '#555', marginBottom: 2 },
+  footerTotalLabel: { fontSize: 11, color: '#f1ebeb', marginBottom: 2 },
   footerTotalValue: { fontSize: 22, fontWeight: 'bold', color: '#fff' },
-  footerItemCount: { fontSize: 11, color: '#a1a1aa' },
+  footerItemCount: { fontSize: 11, color: '#e6e6ee' },
   checkoutBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
     backgroundColor: '#00d4ff', paddingHorizontal: 20,
