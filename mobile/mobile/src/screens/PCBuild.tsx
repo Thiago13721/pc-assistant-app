@@ -93,7 +93,7 @@ export function PCBuild({ navigation }: Props) {
       .join('\n');
 
     try {
-      const response = await fetch('http://10.0.2.2:3000/api/ai/ask', {
+      const response = await fetch('https://pc-assistant-app-2.onrender.com/api/ai/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

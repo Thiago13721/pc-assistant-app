@@ -28,7 +28,14 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
+// O Render define NODE_ENV como 'production' automaticamente
+const isProduction = process.env.NODE_ENV === 'production';
+
 app.listen(PORT, () => {
-  console.log(`🚀 PC Assistant Server rodando em http://localhost:${PORT}`);
-  console.log(`🛠️  Serviço de IA e Banco de Dados ativos.`);
+  console.log('--------------------------------------------------');
+  console.log(`🚀 ForgePC Backend: ONLINE`);
+  console.log(`📡 Ambiente: ${isProduction ? 'PRODUÇÃO (Render)' : 'DESENVOLVIMENTO'}`);
+  console.log(`🔌 Porta: ${PORT}`);
+  console.log(`🔗 URL: ${isProduction ? 'https://pc-assistant-app-2.onrender.com' : `http://localhost:${PORT}`}`);
+  console.log('--------------------------------------------------');
 });

@@ -81,7 +81,7 @@ export function Register({ navigation }: Props) {
 
     setLoading(true);
     try {
-      const response = await fetch('http://10.0.2.2:3000/api/auth/register', {
+      const response = await fetch('https://pc-assistant-app-2.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -69,7 +69,7 @@ export function ItemDetail({ navigation, route }: Props) {
   setPricesLoading(true);
   try {
     const response = await fetch(
-      `http://10.0.2.2:3000/api/price/${encodeURIComponent(product.name)}`
+      `https://pc-assistant-app-2.onrender.com/api/price/${encodeURIComponent(product.name)}`
     );
 
     console.log('📡 Status:', response.status);
@@ -132,7 +132,7 @@ export function ItemDetail({ navigation, route }: Props) {
     setAiLoading(true);
     setAiResult('');
     try {
-      const response = await fetch('http://10.0.2.2:3000/api/ai/ask', {
+      const response = await fetch('https://pc-assistant-app-2.onrender.com/api/ai/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

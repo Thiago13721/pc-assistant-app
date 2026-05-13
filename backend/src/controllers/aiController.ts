@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { spawn } from 'child_process';
-import path from 'path';
+import axios from 'axios';
 
-export const askAI = (req: Request, res: Response): void => {
+const AI_ENGINE_URL = process.env.AI_ENGINE_URL || 'http://localhost:8000';
+
+export const askAI = async (req: Request, res: Response): Promise<void> => {
     const { category, query, budget, tier } = req.body;
 
     console.log(`\n📡 Novo pedido recebido!`);
@@ -10,62 +11,29 @@ export const askAI = (req: Request, res: Response): void => {
     console.log(`💬 Pergunta: ${query || "Nenhuma"}`);
     console.log(`💰 Orçamento: ${budget || "Não informado"}`);
     console.log(`🖥️  Tier: ${tier || "Não informado"}`);
+    console.log(`🤖 Chamando AI Engine: ${AI_ENGINE_URL}`);
 
-    // Caminhos ajustados: subimos 3 níveis (controllers -> src -> backend -> raiz)
-    const pythonPath = path.join(__dirname, '../../../ai_engine/venv/Scripts/python.exe');
-    const scriptPath = path.join(__dirname, '../../../ai_engine/main.py');
+    try {
+        const response = await axios.post(`${AI_ENGINE_URL}/ask-ai`, {
+            category,
+            query:  query  || "",
+            budget: budget || "",
+            tier:   tier   || "",
+        }, { timeout: 60000 }); // 60s — Gemini pode demorar
 
-    const pythonProcess = spawn(
-        pythonPath,
-        [scriptPath, category, query || "", budget || "", tier || ""],
-        { env: { ...process.env, PYTHONIOENCODING: 'utf-8' } }
-    );
+        console.log("✅ Resposta da IA recebida com sucesso.");
+        res.json({ answer: response.data.answer });
 
-    pythonProcess.stdout.setEncoding('utf-8');
-    pythonProcess.stderr.setEncoding('utf-8');
+    } catch (err: any) {
+        const status  = err?.response?.status;
+        const message = err?.response?.data?.detail || err?.message || "Erro desconhecido";
 
-    let result = '';
-    let errorOutput = '';
+        console.error(`❌ Erro ao contatar AI Engine (${status}): ${message}`);
 
-    pythonProcess.stdout.on('data', (data) => {
-        result += data.toString();
-    });
-
-    pythonProcess.stderr.on('data', (data) => {
-        const stderrStr = data.toString();
-        errorOutput += stderrStr;
-        
-        // Restaura o aviso de fallback do seu código original
-        if (stderrStr.includes('[FALLBACK]')) {
-            console.warn(`⚠️  ${stderrStr.trim()}`);
+        if (status === 503) {
+            res.status(503).json({ error: "Motor de IA sobrecarregado. Tente novamente." });
+        } else {
+            res.status(500).json({ error: "Erro interno no motor de IA", detail: message });
         }
-    });
-
-    pythonProcess.on('close', (code) => {
-        if (code !== 0) {
-            console.error(`❌ Erro no processo Python: ${errorOutput}`);
-            res.status(500).json({ error: "Erro interno no motor de IA" });
-            return;
-        }
-
-        const trimmed = result.trim();
-
-        if (!trimmed || trimmed.startsWith("Erro:")) {
-            console.error(`❌ IA retornou erro: ${trimmed}`);
-            res.status(503).json({ error: trimmed || "Serviço indisponível" });
-            return;
-        }
-
-        console.log("✅ Resposta da IA capturada com sucesso.");
-
-        // Correção de Segurança (Edge case): 
-        // Se o Python devolver um JSON formatado, faz o parse. 
-        // Se devolver texto puro (string), empacota no objeto { answer } esperado pelo frontend.
-        try {
-            const parsed = JSON.parse(trimmed);
-            res.json(parsed.answer ? parsed : { answer: parsed });
-        } catch (e) {
-            res.json({ answer: trimmed });
-        }
-    });
+    }
 };
